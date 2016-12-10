@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 
 public class Drag : MonoBehaviour
 {
+    public LayerMask RaycastLayers;
+
     [Tooltip("Maximum raycast distance")]
     public float MaxDist = 4;
 
@@ -29,7 +31,7 @@ public class Drag : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward); // raycast forward
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, MaxDist)
+        if (Physics.Raycast(ray, out hit, MaxDist, RaycastLayers)
             && hit.rigidbody)
         {
             selectedBody = hit.rigidbody;
@@ -38,7 +40,8 @@ public class Drag : MonoBehaviour
         }
 
         // draw debug
-        debug.DrawLine(ray.origin, ray.origin + ray.direction * hit.distance, debug.Materials[3]);
+        if (debug)
+            debug.DrawLine(ray.origin, ray.origin + ray.direction * hit.distance, debug.Materials[3]);
     }
 
     private void dragSelected()
@@ -51,9 +54,13 @@ public class Drag : MonoBehaviour
         selectedBody.AddForceAtPosition(delta * DragForce, selWorldPos);
 
         // draw debug
-        debug.DrawLine(transform.position, curWorldPos, debug.Materials[3]);
-        debug.DrawCrosshair(selWorldPos, 0.4f, debug.Materials[0]);
-        debug.DrawCrosshair(curWorldPos, 0.4f, debug.Materials[1]);
+        if (debug)
+        {
+            debug.DrawLine(transform.position, curWorldPos, debug.Materials[3]);
+            debug.DrawCrosshair(selWorldPos, 0.4f, debug.Materials[0]);
+            debug.DrawCrosshair(curWorldPos, 0.4f, debug.Materials[1]);
+        }
+
     }
 
     private void clearSelect()
@@ -63,28 +70,28 @@ public class Drag : MonoBehaviour
         bodyLocalPoint = Vector3.zero;
     }
 
-	// Update is called once per frame
-	void Update () 
-	{
+    // Update is called once per frame
+    void Update()
+    {
         // no selected body for dragging
         if (!selectedBody && Input.GetMouseButtonDown(0))
         {
             raycastSelect();
             Debug.Log("Select");
         }
-        else if(selectedBody && Input.GetMouseButton(0))
+        else if (selectedBody && Input.GetMouseButton(0))
         {
             dragSelected();
             Debug.Log("Drag");
         }
         // clear selected body if mouse up
-        else if(selectedBody && !Input.GetMouseButton(0))
+        else if (selectedBody && !Input.GetMouseButton(0))
         {
             clearSelect();
             Debug.Log("Clear");
         }
-	}
+    }
 
-    
+
 
 }
