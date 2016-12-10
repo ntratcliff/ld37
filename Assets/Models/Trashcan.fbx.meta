@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 09ff202e1cbc45c4fab1e7a034d4a87b
-timeCreated: 1481345910
+guid: 9c4a3b18224169c44a1acaa96d3e7bd8
+timeCreated: 1481346691
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Desk
+    4300000: Trashcan
     9500000: //RootNode
   materials:
     importMaterials: 1
