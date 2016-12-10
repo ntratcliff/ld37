@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Scorable : MonoBehaviour 
+public class Scorable : MonoBehaviour, IRoundStatusTarget
 {
     public float Value = 1f;
 
@@ -18,6 +19,8 @@ public class Scorable : MonoBehaviour
     private Vector3 rootPos;
     private Vector3 rootAngles;
     private float mass;
+
+    private bool roundActive;
 
 	// Use this for initialization
 	void Start () 
@@ -50,4 +53,15 @@ public class Scorable : MonoBehaviour
 	{
         scoreObject();
 	}
+
+    public void RoundStart()
+    {
+        roundActive = true;
+    }
+
+    public void RoundEnd()
+    {
+        roundActive = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
 }
