@@ -51,7 +51,7 @@ public class Drag : MonoBehaviour
 
         Vector3 delta = curWorldPos - selWorldPos;
 
-        selectedBody.AddForceAtPosition(delta * DragForce, selWorldPos);
+        selectedBody.AddForceAtPosition(delta * DragForce * Time.deltaTime * 60f, selWorldPos);
 
         // draw debug
         if (debug)
