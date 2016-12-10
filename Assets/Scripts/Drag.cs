@@ -12,6 +12,12 @@ public class Drag : MonoBehaviour
     [Tooltip("Scalar force for dragging")]
     public float DragForce = 1f;
 
+    [Tooltip("Maximum dragging force")]
+    public float MaxForce = 5f;
+
+    [Tooltip("Maximum dragging speed")]
+    public float MaxSpeed = 5f;
+
     // member variables for dragging
     private Rigidbody selectedBody;
     private float selectionDist;
@@ -46,12 +52,20 @@ public class Drag : MonoBehaviour
 
     private void dragSelected()
     {
+        // calculate dragging force 
         Vector3 selWorldPos = selectedBody.transform.TransformPoint(bodyLocalPoint);
         Vector3 curWorldPos = transform.position + transform.forward * selectionDist;
 
         Vector3 delta = curWorldPos - selWorldPos;
 
-        selectedBody.AddForceAtPosition(delta * DragForce * Time.deltaTime * 60f, selWorldPos);
+        Vector3 force = delta * DragForce * Time.deltaTime * 60f;
+        force = Vector3.ClampMagnitude(force, MaxForce);
+
+        // apply dragging force
+        selectedBody.AddForceAtPosition(force, selWorldPos);
+
+        // clamp speed
+        selectedBody.velocity = Vector3.ClampMagnitude(selectedBody.velocity, MaxSpeed);
 
         // draw debug
         if (debug)
