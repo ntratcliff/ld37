@@ -5,7 +5,10 @@ using System;
 [RequireComponent(typeof(Rigidbody))]
 public class Scorable : MonoBehaviour, IRoundStatusTarget
 {
+    public float MoveTolerance = 0.3f;
+
     public float Value = 1f;
+    public float ImpactValue = 0.01f;
 
     private float sum;
     private float maxDeltaScore;
@@ -19,40 +22,47 @@ public class Scorable : MonoBehaviour, IRoundStatusTarget
     private Vector3 rootPos;
     private Vector3 rootAngles;
     private float mass;
+    private bool moved;
 
     private bool roundActive;
 
-	// Use this for initialization
-	void Start () 
-	{
+
+    // Use this for initialization
+    void Start()
+    {
         rootPos = transform.position;
         rootAngles = transform.eulerAngles;
         mass = GetComponent<Rigidbody>().mass;
-	}
-	
-    private void scoreObject()
+    }
+
+    private void checkMoved()
     {
         // get delta orientation
         Vector3 deltaPos = transform.position - rootPos;
-        Vector3 deltaAngle = transform.eulerAngles - rootAngles;
 
-        // convert angles from degrees to radians before getting scalar
-        deltaAngle *= Mathf.Deg2Rad;
+        // check if object has moved
+        moved = deltaPos.sqrMagnitude > Mathf.Pow(MoveTolerance, 2);
 
-        // calculate delta orienation score
-        float deltaScore = (deltaPos.magnitude) * mass * Value;
-        if(deltaScore > maxDeltaScore)
-            maxDeltaScore = deltaScore;
-
-        // set sum as max delta orientation score (TODO: velocity and impact scoring?)
-        sum = maxDeltaScore;
+        // if moved set score to value
+        if (moved)
+            sum = Value;
     }
 
-	// Update is called once per frame
-	void Update () 
-	{
-        scoreObject();
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        if (!moved)
+            checkMoved();
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        // score collision if moved
+        if(moved)
+        {
+            sum += ImpactValue * collision.relativeVelocity.magnitude;
+        }
+    }
 
     public void RoundStart()
     {
