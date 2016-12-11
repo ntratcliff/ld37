@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     private IRoundStatusTarget roundStatTargets;
 
     public GameObject[] EnableOnStart;
+    public GameObject[] DisableOnStart;
+
     public GameObject[] EnableOnEnd;
+    public GameObject[] DisableOnEnd;
 
 	// Use this for initialization
 	void Start () 
@@ -24,6 +27,12 @@ public class GameManager : MonoBehaviour
             EnableOnStart[i].SetActive(true);
         }
 
+        // disable start objects
+        for (int i = 0; i < DisableOnStart.Length; i++)
+        {
+            DisableOnStart[i].SetActive(false);
+        }
+
         // start the round
         executeStatusRecursive(this.gameObject, null, (x, y) => x.RoundStart());
 	}
@@ -34,6 +43,12 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < EnableOnEnd.Length; i++)
         {
             EnableOnEnd[i].SetActive(true);
+        }
+
+        // disable end objects
+        for (int i = 0; i < DisableOnEnd.Length; i++)
+        {
+            DisableOnEnd[i].SetActive(false);
         }
 
         // call delegates
