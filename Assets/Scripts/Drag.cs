@@ -91,18 +91,15 @@ public class Drag : MonoBehaviour
         if (!selectedBody && Input.GetMouseButtonDown(0))
         {
             raycastSelect();
-            Debug.Log("Select");
         }
         else if (selectedBody && Input.GetMouseButton(0))
         {
             dragSelected();
-            Debug.Log("Drag");
         }
         // clear selected body if mouse up
         else if (selectedBody && !Input.GetMouseButton(0))
         {
             clearSelect();
-            Debug.Log("Clear");
         }
     }
 
