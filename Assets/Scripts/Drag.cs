@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(AudioSource))]
 public class Drag : MonoBehaviour
 {
     public LayerMask RaycastLayers;
@@ -24,6 +25,11 @@ public class Drag : MonoBehaviour
     private Vector3 bodyLocalPoint;
 
     private DebugRenderer debug;
+
+    // audio
+    public AudioClip[] VOClips;
+    public float VOChance = 0.5f;
+    private bool voThisDrag;
 
     // Use this for initialization
     void Start()
@@ -82,6 +88,22 @@ public class Drag : MonoBehaviour
         selectedBody = null;
         selectionDist = 0f;
         bodyLocalPoint = Vector3.zero;
+
+        // vo
+        voThisDrag = false;
+    }
+
+    private void voDrag()
+    {
+        float rand = Random.Range(0f, 1f);
+
+        if (rand <= VOChance)
+        {
+            voThisDrag = true;
+            int c = Random.Range(0, VOClips.Length);
+            GetComponent<AudioSource>().clip = VOClips[c];
+            GetComponent<AudioSource>().Play();
+        }
     }
 
     // Update is called once per frame
@@ -91,6 +113,9 @@ public class Drag : MonoBehaviour
         if (!selectedBody && Input.GetMouseButtonDown(0))
         {
             raycastSelect();
+
+            if (selectedBody && !GetComponent<AudioSource>().isPlaying && VOClips.Length > 0)
+                voDrag();
         }
         else if (selectedBody && Input.GetMouseButton(0))
         {
