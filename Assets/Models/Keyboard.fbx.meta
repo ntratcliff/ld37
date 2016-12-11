@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: ab285f172f160dd44835f4688624ffa3
-timeCreated: 1481426240
+guid: 20c82e9d8c6d43e4c9156429047f3885
+timeCreated: 1481436914
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cup
+    4300000: Keyboard
     9500000: //RootNode
   materials:
     importMaterials: 1
