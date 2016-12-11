@@ -30,6 +30,7 @@ public class Drag : MonoBehaviour
     public AudioClip[] VOClips;
     public float VOChance = 0.5f;
     private bool voThisDrag;
+    private int lastClip;
 
     // Use this for initialization
     void Start()
@@ -100,9 +101,21 @@ public class Drag : MonoBehaviour
         if (rand <= VOChance)
         {
             voThisDrag = true;
+
             int c = Random.Range(0, VOClips.Length);
+            if(c== lastClip && c > 0)
+            {
+                c--;
+            }
+            else if(c==lastClip)
+            {
+                c = VOClips.Length - 1;
+            }
+
             GetComponent<AudioSource>().clip = VOClips[c];
             GetComponent<AudioSource>().Play();
+
+            lastClip = c;
         }
     }
 
