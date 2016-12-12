@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour 
 {
@@ -15,11 +16,17 @@ public class GameManager : MonoBehaviour
     public GameObject[] EnableOnEnd;
     public GameObject[] DisableOnEnd;
 
+    public AudioMixer SFXMixer;
+    public float FoleyEnableDelay = 0.5f;
+
 	// Use this for initialization
 	void Start () 
 	{
         timer = FindObjectOfType<RoundTime>();
         scoreboard = FindObjectOfType<Scoreboard>();
+
+        // mute foley temporarily
+        StartCoroutine(EnableFoleyDelay());
 
         // enable start objects
         for (int i = 0; i < EnableOnStart.Length; i++)
@@ -62,6 +69,18 @@ public class GameManager : MonoBehaviour
             executeStatusRecursive(child.gameObject, data, callbackFunction);
         }
         ExecuteEvents.Execute<IRoundStatusTarget>(root, data, callbackFunction);
+    }
+
+    IEnumerator EnableFoleyDelay()
+    {
+        float vol = 0;
+        SFXMixer.GetFloat("FoleyVol", out vol);
+        SFXMixer.SetFloat("FoleyVol", -80);
+
+        yield return new WaitForSeconds(FoleyEnableDelay);
+
+        SFXMixer.SetFloat("FoleyVol", vol);
+
     }
 
 }
